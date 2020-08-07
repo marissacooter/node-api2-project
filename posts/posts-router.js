@@ -37,4 +37,19 @@ router.get("/posts/:id", (req, res) => {
     })
 })
 
+// GET POST COMMENTS BY ID
+router.get("/posts/:postId/comments", (req, res) => {
+    db.findPostComments(req.params.postId)
+    .then((comments) => {
+        res.json(comments)
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            message: "Error retrieving comments"
+        })
+    })
+
+})
+
 module.exports = router
