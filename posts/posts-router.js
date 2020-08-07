@@ -52,4 +52,23 @@ router.get("/posts/:postId/comments", (req, res) => {
 
 })
 
+// ADD A POST
+router.post("/posts", (req, res) => {
+    if (!req.body.title || !req.body.contents) {
+        return res.status(400).json({
+            message: "Missing post title or contents"
+        })
+    }
+    db.insert(req.body)
+        .then((post) => {
+            res.status(201).json(post)
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).json({
+                message: "Error creating post"
+            })
+        })
+})
+
 module.exports = router
