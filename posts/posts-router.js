@@ -71,4 +71,23 @@ router.post("/posts", (req, res) => {
         })
 })
 
+// ADD A COMMENT TO A POST
+router.post("/posts/:id/comments", (req, res) => {
+    if (!req.body.text) {
+        return res.status(400).json({
+            message: "Missing comment text"
+        })
+    }
+    db.insertComment(req.params.id, req.body)
+    .then((comment) => {
+        res.status(201).json(comment)
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            message: "Error adding comment"
+        })
+    })
+})
+
 module.exports = router
