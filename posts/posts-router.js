@@ -73,20 +73,69 @@ router.post("/posts", (req, res) => {
 
 // ADD A COMMENT TO A POST
 router.post("/posts/:id/comments", (req, res) => {
-    if (!req.body.text) {
-        return res.status(400).json({
-            message: "Missing comment text"
+    const id = req.params.id
+    const newComment = req.body
+
+    if (!newComment) {
+        res.status(404).json({
+            message: "Missing text body"
         })
+    } else {
+        db.findById(id)
+            .then((post) => {
+                if (post) {
+                    db.insertComment(newComment)
+                        .then(created => {
+                            res.status(201).json(created)
+                        })
+                } else {
+                    res.status(400).json({ "error": "Comment could not be created."})
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: "Error retreiving post"
+                })
+            })
     }
-    db.insertComment(req.params.id, req.body)
-    .then((comment) => {
-        res.status(201).json(comment)
+})
+
+// router.post("/posts/:id/comments", (req, res) => {
+//     const id = req.params.id
+//     const newComment = req.body.text
+
+//     db.findById(id)
+//     .then((post) => {
+//         if (!post) {
+//             res.status(404).json({
+//                 message: "Post could not be found"
+//             })
+//         } else {
+//             if (!newComment) {
+//                 res.status(400).json({
+//                     message: "Comment missing text value"
+//                 })
+//             } else {
+
+//             }
+//         }
+//     })
+//     .catch(() => {
+
+//     })
+// })
+
+
+
+// DELETE A POST
+router.delete("/posts/:id", (req, res) => {
+    db.remove(id)
+    .then(() => {
+
     })
-    .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-            message: "Error adding comment"
-        })
+    .catch(() => {
+
     })
 })
 
