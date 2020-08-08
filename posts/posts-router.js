@@ -101,42 +101,25 @@ router.post("/posts/:id/comments", (req, res) => {
     }
 })
 
-// router.post("/posts/:id/comments", (req, res) => {
-//     const id = req.params.id
-//     const newComment = req.body.text
-
-//     db.findById(id)
-//     .then((post) => {
-//         if (!post) {
-//             res.status(404).json({
-//                 message: "Post could not be found"
-//             })
-//         } else {
-//             if (!newComment) {
-//                 res.status(400).json({
-//                     message: "Comment missing text value"
-//                 })
-//             } else {
-
-//             }
-//         }
-//     })
-//     .catch(() => {
-
-//     })
-// })
-
-
-
 // DELETE A POST
 router.delete("/posts/:id", (req, res) => {
-    db.remove(id)
-    .then(() => {
+    const post = db.findById(req.params.id)
 
-    })
-    .catch(() => {
-
-    })
+    if (!post) {
+        res.status(404).json({
+            message: "Post could not be found"
+        })
+    } else {
+        db.remove(post)
+        .then((post) => {
+            res.status(200).json('Post has been deleted')
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: "Error: The post could not be removed"
+            })
+        })
+    }
 })
 
 module.exports = router
